@@ -25,10 +25,12 @@ class VPNRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         """GET requests go here. Other request verbs don't get processed because they have no handlers."""
         self.log_request = lambda _: None
-        ip = self.client_address[0]
+        # self.client_ip = self.client_address[0]
+        # Using 'X-Real-IP' here instead because the app lives behind an Nginx reverse proxy.
+        self.client_ip = self.headers['X-Real-IP']
         if self.check_denail():
             logging.info("Request #{} from {} has been denied. Was a GET {}".format(
-                self.ip_table[ip], ip, self.path))
+                self.ip_table[self.client_ip], self.client_ip, self.path))
             return
         # Adding a '/about' is a fancy way of making requests going to '/' get handled by '/about' handler.
         command = (self.path + '/about').replace('/', ' ').split()[0]
@@ -48,11 +50,11 @@ class VPNRequestHandler(BaseHTTPRequestHandler):
 
         # Log that request.
         logging.info(
-            "Got GET {} from {} - returned {}".format(self.path, ip, code))
+            "Got GET {} from {} - returned {}".format(self.path, self.client_ip, code))
 
     def handle_route_new(self):
         try:
-            id = self.vpn_manager.new(self.client_address[0])
+            id = self.vpn_manager.new(self.client_ip)
             filename = id + '.ovpn'
             return (200,
                     "<p>Generated an OpenVPN client for you. Click the link below to download it.</p>"
@@ -84,7 +86,7 @@ class VPNRequestHandler(BaseHTTPRequestHandler):
     def handle_route_delete(self):
         try:
             client_id = self.path.replace('/', ' ').split()[1]
-            self.vpn_manager.remove(self.client_address[0], client_id)
+            self.vpn_manager.remove(self.client_ip, client_id)
             return (200, "{} was successfully removed, thanks!".format(client_id))
         except IndexError:
             return (400, "You need to provide a client ID for the client you want to delete. "
@@ -93,7 +95,7 @@ class VPNRequestHandler(BaseHTTPRequestHandler):
             return (400, str(e))
 
     def handle_route_myip(self):
-        return (200, self.client_address[0])
+        return (200, self.client_ip)
 
     def handle_route_about(self):
         return (200, "<p>Visit <a href=https://github.com/meryacine/vpn-manager>Github</a></p>"
@@ -112,17 +114,16 @@ class VPNRequestHandler(BaseHTTPRequestHandler):
     def check_denail(self) -> bool:
         """Check whether we should deny servicing this request.
         Returns True when service is denied."""
-        ip = self.client_address[0]
-        self.ip_table[ip] += 1
+        self.ip_table[self.client_ip] += 1
         # Keep sending this message for 10 requests past the max request limit.
-        if self.ip_table[ip] in range(self.MAX_REQUESTS_PER_HOUR,
-                                      self.MAX_REQUESTS_PER_HOUR + 10):
+        if self.ip_table[self.client_ip] in range(self.MAX_REQUESTS_PER_HOUR,
+                                                  self.MAX_REQUESTS_PER_HOUR + 10):
             self.send_response(400)
             self.end_headers()
             self.wfile.write(b"Are you a bot?")
             return True
         # After that don't respond to that IP nomore.
-        elif self.ip_table[ip] > self.MAX_REQUESTS_PER_HOUR:
+        elif self.ip_table[self.client_ip] > self.MAX_REQUESTS_PER_HOUR:
             self.close_connection = True
             return True
         return False
