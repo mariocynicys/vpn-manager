@@ -22,9 +22,9 @@ The program MUST not hang for any reason. And should return `0` on success and a
 ## Try it
 This server is deployed on a cloud VM in Frankfurt, Germany.
 To interact with the server, hit one of these endpoints:
-- [/new](http://144.24.170.108/new)
-- [/delete](http://144.24.170.108/delete)
-- [/myip](http://144.24.170.108/myip)
+- [/new](http://vpn.mariocynicys.cf/new)
+- [/delete](http://vpn.mariocynicys.cf/delete)
+- [/myip](http://vpn.mariocynicys.cf/myip)
 
 # Disclaimer
 ## There are probably many security flaws in this code. PRs are appreciated.

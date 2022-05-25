@@ -9,8 +9,7 @@ then
 	if [[ $? == 0 ]]
 	then
 		cat /root/$2.ovpn
-		# We don't want to store this file on disk
-		# sudo + user input ??! crazy are you?
+		# We don't want to store this file on disk.
 		sudo rm /root/$2.ovpn
 	else
 		exit 100
@@ -20,7 +19,7 @@ then
 	output=$(printf "2\n $2\n y\n" | sudo timeout 1s ./openvpn-install.sh 2>$NULL)
 	if [[ $? == 0 ]]
 	then
-		# Echo the name of the revoked client to stdout
+		# Echo the name of the revoked client to stdout.
 		echo $output | awk '{print $(NF-1)}'
 	else
 		exit 100

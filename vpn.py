@@ -54,7 +54,7 @@ def job(action, period: float, shutdown: threading.Event, *args, **kwargs):
     with a `shutdown` event. `action` is called one last time after `shutdown` is set."""
     while not shutdown.is_set():
         shutdown.wait(period)
-        logging.info("Running the period job: {} with args {} and kwargs {}".format(
+        logging.info("Running the periodic job: {} with args {} and kwargs {}".format(
             action.__name__, args, kwargs))
         action(*args, **kwargs)
 
@@ -67,7 +67,7 @@ def main():
                         default='pickled_vpn_manager.pickle')
     parser.add_argument('-p', '--port', type=int,
                         help='The port this service runs on.',
-                        default=80)
+                        default=8000)
     parser.add_argument('-m', '--max-clients', type=int, dest='maxclientcount',
                         help='The maximum number of clients the service can handle.',
                         default=10000)

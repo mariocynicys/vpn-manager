@@ -110,8 +110,8 @@ class VPNManager:
         """Prints a json object to stdout listing IP-clients relation."""
         print('{')
         for ip, clients in self.user_clients_map.items():
-            print('\t', ip, ': [', sep='')
+            print('\t"', ip, '": [', sep='')
             for client in clients:
-                print('\t\t', client, ',', sep='')
+                print('\t\t"', client, '",', sep='')
             print('\t', '],', sep='')
         print('}')

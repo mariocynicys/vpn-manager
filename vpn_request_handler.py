@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, Optional, Tuple
+from typing import Dict
 from collections import defaultdict
 
 from vpn_manager import VPNManager
@@ -30,8 +30,8 @@ class VPNRequestHandler(BaseHTTPRequestHandler):
             logging.info("Request #{} from {} has been denied. Was a GET {}".format(
                 self.ip_table[ip], ip, self.path))
             return
-        # '/github' is a fancy way of making requests going to '/' go to '/github' instead.
-        command = (self.path + '/github').replace('/', ' ').split()[0]
+        # Adding a '/about' is a fancy way of making requests going to '/' get handled by '/about' handler.
+        command = (self.path + '/about').replace('/', ' ').split()[0]
         handler = type(self).__dict__.get('handle_route_' + command)
         if handler is None:
             code, body = self.handle_route_404()
@@ -63,9 +63,8 @@ class VPNRequestHandler(BaseHTTPRequestHandler):
             return (400, str(e))
 
     def handle_route_get(self):
-        request = self.path.replace('/', ' ').split()
         try:
-            id = request[1][:-len('.ovpn')]
+            id = self.path.replace('/', ' ').split()[1][:-len('.ovpn')]
             ovpn = self.vpn_manager.cache[id]
             self.send_response(200)
             # This header will cause the file to be download directly and not displayed as html.
@@ -83,8 +82,8 @@ class VPNRequestHandler(BaseHTTPRequestHandler):
             return (400, str(e))
 
     def handle_route_delete(self):
-        client_id = self.path.replace('/', ' ').split()[1]
         try:
+            client_id = self.path.replace('/', ' ').split()[1]
             self.vpn_manager.remove(self.client_address[0], client_id)
             return (200, "{} was successfully removed, thanks!".format(client_id))
         except IndexError:
@@ -96,8 +95,11 @@ class VPNRequestHandler(BaseHTTPRequestHandler):
     def handle_route_myip(self):
         return (200, self.client_address[0])
 
-    def handle_route_github(self):
-        return (200, "<p>Visit <a href=https://github.com/meryacine/vpn-manager>Github</a></p>")
+    def handle_route_about(self):
+        return (200, "<p>Visit <a href=https://github.com/meryacine/vpn-manager>Github</a></p>"
+                     "<p>To get an OpenVPN client visit <a href=/new>new</a><p>"
+                     "<p>To delete an OpenVPN client visit <a href=/delete>delete</a><p>"
+                     "<p>To know your IP address visit <a href=/myip>myip</a><p>")
 
     def handle_route_404(self):
         hidden_endpoints = ['/get', '/404']
