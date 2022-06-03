@@ -74,7 +74,7 @@ class VPNRequestHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(ovpn)
             # We have already sent a response.
-            return (200, 'RESPONSE_ALREADY_SENT')
+            return (200, self.RESPONSE_ALREADY_SENT)
         except IndexError:
             return (400, "Please don't send GET /get requests by yourself.")
         except KeyError:
@@ -99,6 +99,7 @@ class VPNRequestHandler(BaseHTTPRequestHandler):
 
     def handle_route_about(self):
         return (200, "<p>Visit <a href=https://github.com/meryacine/vpn-manager>Github</a></p>"
+                     "<p>Download OpenVPN from <a href=https://openvpn.net/community-downloads>here</a></p>"
                      "<p>To get an OpenVPN client visit <a href=/new>new</a><p>"
                      "<p>To delete an OpenVPN client visit <a href=/delete>delete</a><p>"
                      "<p>To know your IP address visit <a href=/myip>myip</a><p>")
