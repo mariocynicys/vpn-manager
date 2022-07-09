@@ -24,7 +24,7 @@ This server is deployed on a cloud VM in Frankfurt, Germany.
 To interact with the server, hit one of these endpoints:
 - [/new](http://vpn.mariocynicys.cf/new)
 - [/delete](http://vpn.mariocynicys.cf/delete)
-- [/myip](http://vpn.mariocynicys.cf/myip)
+- [/ip](http://vpn.mariocynicys.cf/ip)
 
 # Disclaimer
 ## There are probably many security flaws in this code. PRs are appreciated.

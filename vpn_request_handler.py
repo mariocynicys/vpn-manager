@@ -90,19 +90,20 @@ class VPNRequestHandler(BaseHTTPRequestHandler):
             return (200, "{} was successfully removed, thanks!".format(client_id))
         except IndexError:
             return (400, "You need to provide a client ID for the client you want to delete. "
-                         "The ID is the ovpn file name (which was downloaded from the /new endpoint).")
+                         "The ID is the ovpn file name (which was downloaded from the /new endpoint). "
+                         "Hit the endpoint again with this path format /delete/CLIENT-ID.")
         except Exception as e:
             return (400, str(e))
 
-    def handle_route_myip(self):
+    def handle_route_ip(self):
         return (200, self.client_ip)
 
     def handle_route_about(self):
         return (200, "<p>Visit <a href=https://github.com/meryacine/vpn-manager>Github</a></p>"
                      "<p>Download OpenVPN from <a href=https://openvpn.net/community-downloads>here</a></p>"
-                     "<p>To get an OpenVPN client visit <a href=/new>new</a><p>"
-                     "<p>To delete an OpenVPN client visit <a href=/delete>delete</a><p>"
-                     "<p>To know your IP address visit <a href=/myip>myip</a><p>")
+                     "<p>To get an OpenVPN client click <a href=/new>here</a><p>"
+                     "<p>To delete an OpenVPN client click <a href=/delete>here</a><p>"
+                     "<p>To know your IP address click <a href=/ip>here</a><p>")
 
     def handle_route_404(self):
         hidden_endpoints = ['/get', '/404']

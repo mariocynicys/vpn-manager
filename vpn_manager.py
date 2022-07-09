@@ -84,6 +84,7 @@ class VPNManager:
             raise RuntimeError(
                 "Couldn't remove client {}. Contact the vpn server admin.".format(client_id))
         self.client_count -= 1
+        self.cache.pop(client_id)
         self.clients.remove(client_id)
         self.user_clients_map[user].remove(client_id)
         logging.info("User {} deleted client {}.".format(user, client_id))
