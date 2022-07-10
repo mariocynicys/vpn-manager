@@ -25,9 +25,8 @@ class VPNRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         """GET requests go here. Other request verbs don't get processed because they have no handlers."""
         self.log_request = lambda _: None
-        # self.client_ip = self.client_address[0]
-        # Using 'X-Real-IP' here instead because the app lives behind an Nginx reverse proxy.
-        self.client_ip = self.headers['X-Real-IP']
+        # Prefering 'X-Real-IP' here because the app might be living behind a reverse proxy.
+        self.client_ip = self.headers['X-Real-IP'] or self.client_address[0]
         if self.check_denail():
             logging.info("Request #{} from {} has been denied. Was a GET {}".format(
                 self.ip_table[self.client_ip], self.client_ip, self.path))
