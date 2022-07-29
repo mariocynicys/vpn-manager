@@ -1,9 +1,10 @@
 import logging
 from typing import Dict
 from collections import defaultdict
-
-from vpn_manager import VPNManager
 from http.server import BaseHTTPRequestHandler
+
+from util import load_file
+from vpn_manager import VPNManager
 
 
 class VPNRequestHandler(BaseHTTPRequestHandler):
@@ -24,6 +25,7 @@ class VPNRequestHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         """GET requests go here. Other request verbs don't get processed because they have no handlers."""
+        # Don't log the incoming requests, we do our own logging.
         self.log_request = lambda _: None
         # Prefering 'X-Real-IP' here because the app might be living behind a reverse proxy.
         self.client_ip = self.headers['X-Real-IP'] or self.client_address[0]
@@ -98,14 +100,7 @@ class VPNRequestHandler(BaseHTTPRequestHandler):
         return (200, self.client_ip)
 
     def handle_route_about(self):
-        return (200, "<p>Visit <a href=https://github.com/meryacine/vpn-manager>Github</a></p>"
-                     "<p>Download OpenVPN from <a href=https://openvpn.net/community-downloads>here</a></p>"
-                     "<p>To get an OpenVPN client click <a href=/new>here</a><p>"
-                     "<p>To delete an OpenVPN client click <a href=/delete>here</a><p>"
-                     "<p>To know your IP address click <a href=/ip>here</a><p>"
-                     "<br>"
-                     "<p>Need a Tor bridge that doesn't betray you and go offline (I will try to keep it online as much as I can):</p>"
-                     "<p>Bridge obfs4 144.24.170.108:5001 54A2A86C59B34EEC0810E73D9690A64C8A485277 cert=EBNY8ohmiqnjSN6oN1oaKJLCfngK9f94QZvgwpHz+HM1qoJiyW+UJ8TFcgrXe8ewPv+gIQ iat-mode=0</p>")
+        return (200, load_file('about.html'))
 
     def handle_route_404(self):
         hidden_endpoints = ['/get', '/404']
