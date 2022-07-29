@@ -102,7 +102,10 @@ class VPNRequestHandler(BaseHTTPRequestHandler):
                      "<p>Download OpenVPN from <a href=https://openvpn.net/community-downloads>here</a></p>"
                      "<p>To get an OpenVPN client click <a href=/new>here</a><p>"
                      "<p>To delete an OpenVPN client click <a href=/delete>here</a><p>"
-                     "<p>To know your IP address click <a href=/ip>here</a><p>")
+                     "<p>To know your IP address click <a href=/ip>here</a><p>"
+                     "<br>"
+                     "<p>Need a Tor bridge that doesn't betray you and go offline (I will try to keep it online as much as I can):</p>"
+                     "<p>Bridge obfs4 144.24.170.108:5001 54A2A86C59B34EEC0810E73D9690A64C8A485277 cert=EBNY8ohmiqnjSN6oN1oaKJLCfngK9f94QZvgwpHz+HM1qoJiyW+UJ8TFcgrXe8ewPv+gIQ iat-mode=0</p>")
 
     def handle_route_404(self):
         hidden_endpoints = ['/get', '/404']
