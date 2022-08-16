@@ -27,7 +27,7 @@ class VPNRequestHandler(BaseHTTPRequestHandler):
         """GET requests go here. Other request verbs don't get processed because they have no handlers."""
         # Don't log the incoming requests, we do our own logging.
         self.log_request = lambda _: None
-        # Prefering 'X-Real-IP' here because the app might be living behind a reverse proxy.
+        # Preferring 'X-Real-IP' here because the app might be living behind a reverse proxy.
         self.client_ip = self.headers['X-Real-IP'] or self.client_address[0]
         if self.check_denail():
             logging.info("Request #{} from {} has been denied. Was a GET {}".format(
@@ -60,8 +60,7 @@ class VPNRequestHandler(BaseHTTPRequestHandler):
             return (200,
                     "<p>Generated an OpenVPN client for you. Click the link below to download it.</p>"
                     "<a href=/get/{} target=_blank>Download</a>"
-                    "<p>Please keep the ovpn file name as is. The file name is the client ID. "
-                    "You can use it to delete this client when you no longer need it (by hitting /delete/CLIENT-ID).</p>".format(filename))
+                    "<p>Inside the ovpn file you will find a link to delete the client when you no longer need it.</p>".format(filename))
         except Exception as e:
             return (400, str(e))
 
@@ -73,6 +72,8 @@ class VPNRequestHandler(BaseHTTPRequestHandler):
             # This header will cause the file to be download directly and not displayed as html.
             self.send_header('Content-type', 'application/octet-stream')
             self.end_headers()
+            note = "# Visit {}/delete/{} to delete this client.\n".format(self.headers['Host'], id)
+            self.wfile.write(bytes(note, "utf-8"))
             self.wfile.write(ovpn)
             # We have already sent a response.
             return (200, self.RESPONSE_ALREADY_SENT)

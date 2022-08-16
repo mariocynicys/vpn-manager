@@ -58,7 +58,7 @@ class VPNManager:
         # Remember that this user owns the just created client.
         self.user_clients_map[user].append(client_id)
         # If we hit the maximum cache size, the first half have probably
-        # stayed there for so long. Delete it to free some memory.
+        # stayed there for too long. Delete it to free some memory.
         if len(self.cache) == self.max_cache_size:
             logging.info("Hit the maximum ovpn file count. Pruning {} ovpn files.".format(self.max_cache_size / 2))
             while len(self.cache) > self.max_cache_size / 2:
