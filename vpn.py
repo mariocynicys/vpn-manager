@@ -73,7 +73,9 @@ def main():
                         default=10000)
     parser.add_argument('-l', '--log-to', dest='logfile',
                         help='A file to log to. The logger will always append'
-                             ' to that file and won\'t overwrite it.')
+                             ' to that file and won\'t overwrite it.'
+                             ' Use "-" to log to stderr.',
+                        default='debug.log')
     parser.add_argument('-u', '--list-users',
                         action='store_true',
                         help='List the users (IPs) and the clients they own.'
@@ -85,6 +87,10 @@ def main():
                              ' and you will need to get a new one the next time.'
                              ' This doesn\'t start the server.')
     args = parser.parse_args()
+
+    # If the log file is '-', log to stderr.
+    if args.logfile == '-':
+        args.logfile = None
 
     # Initialize a global logger.
     logging.basicConfig(filename=args.logfile, level=logging.NOTSET,
