@@ -22,9 +22,9 @@ The program MUST not hang for any reason. And should return `0` on success and a
 ## Try it:
 This server is deployed on a cloud VM in Frankfurt, Germany.
 To interact with the server, hit one of these endpoints:
-- [/new](http://vpn.mariocynicys.cf/new)
-- [/delete](http://vpn.mariocynicys.cf/delete)
-- [/ip](http://vpn.mariocynicys.cf/ip)
+- [/new](http://vpn.mariocynicys.me/new)
+- [/delete](http://vpn.mariocynicys.me/delete)
+- [/ip](http://vpn.mariocynicys.me/ip)
 
 ## How to deploy:
 - First, install OpenVPN server using `openvpn-install.sh` script. After installing, don't delete the script since it's used to add and remove clients as well.
